@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: mysql-api
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: actividad_api
+      MYSQL_USER: api_user
+      MYSQL_PASSWORD: api_pass
+    volumes:
+      - mysql_api_data:/var/lib/mysql
+volumes:
+  mysql_api_data:
