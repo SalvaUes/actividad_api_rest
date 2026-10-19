@@ -60,9 +60,15 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
         binding.fabAddProduct.setOnClickListener(v -> showCreateProductDialog());
     }
 
+    private String getFormattedToken() {
+        String token = sessionManager.getToken();
+        if (token == null) return "";
+        return token.startsWith("Bearer ") ? token : "Bearer " + token;
+    }
+
     private void loadProducts() {
         setLoading(true);
-        String token = sessionManager.getToken();
+        String token = getFormattedToken();
 
         apiService.getProducts(token).enqueue(new Callback<List<Product>>() {
             @Override
@@ -190,14 +196,14 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
 
     private void createProduct(ProductRequest request) {
         setLoading(true);
-        String token = sessionManager.getToken();
+        String token = getFormattedToken();
 
         apiService.createProduct(token, request).enqueue(new Callback<Product>() {
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {
                 setLoading(false);
                 if (response.isSuccessful()) {
-                    Toast.makeText(ProductsActivity.this, "Producto creado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductsActivity.this, "Producto creado exitosamente", Toast.LENGTH_SHORT).show();
                     loadProducts();
                 } else {
                     Toast.makeText(ProductsActivity.this, "Error al crear producto", Toast.LENGTH_SHORT).show();
@@ -214,7 +220,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
 
     private void updateProduct(Long productId, ProductRequest request) {
         setLoading(true);
-        String token = sessionManager.getToken();
+        String token = getFormattedToken();
 
         apiService.updateProduct(token, productId, request).enqueue(new Callback<Product>() {
             @Override
@@ -238,7 +244,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
 
     private void deleteProduct(Long productId) {
         setLoading(true);
-        String token = sessionManager.getToken();
+        String token = getFormattedToken();
 
         apiService.deleteProduct(token, productId).enqueue(new Callback<Void>() {
             @Override
@@ -261,7 +267,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductAdapte
     }
 
     private void performLogout() {
-        String token = sessionManager.getToken();
+        String token = getFormattedToken();
 
         apiService.logout(token).enqueue(new Callback<Void>() {
             @Override
